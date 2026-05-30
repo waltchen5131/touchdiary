@@ -1140,7 +1140,6 @@ function saveEdit(){
   if(!editingEntry)return;
   const{dateKey,id}=editingEntry;
   const all=loadAll();const e=(all[dateKey]||[]).find(x=>x.id===id);if(!e)return;
-  const c=catState.edit;
   const newDate=document.getElementById('editDate').value||dateKey;
   const c=catState.edit;
   if(!c.l2Set) c.l2Set=new Set();
