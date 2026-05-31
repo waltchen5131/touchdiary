@@ -721,6 +721,8 @@ function todayKey(){const d=new Date();return `${d.getFullYear()}-${pad(d.getMon
 function pad(n){return String(n).padStart(2,'0');}
 function nowTime(){const n=new Date();return `${pad(n.getHours())}:${pad(n.getMinutes())}`;}
 function getEntries(dk){return(loadAll()[dk]||[]).slice().sort((a,b)=>(a.timeStart||a.time||'').localeCompare(b.timeStart||b.time||''));}
+let _idCounter = 0;
+function uniqueId(){ return Date.now() * 1000 + (++_idCounter % 1000); }
 function saveEntry(e){const all=loadAll();if(!all[e.date])all[e.date]=[];all[e.date].push(e);saveAll(all);}
 function delEntry(dk,id){const all=loadAll();if(all[dk]){all[dk]=all[dk].filter(e=>e.id!==id);if(!all[dk].length)delete all[dk];}saveAll(all);}
 function updEntry(dk,upd){const all=loadAll();if(all[dk]){const i=all[dk].findIndex(e=>e.id===upd.id);if(i>=0)all[dk][i]=upd;}saveAll(all);}
@@ -988,12 +990,12 @@ function handleSubmit(ev){
   const fare=expenses.reduce((s,x)=>s+x.amount,0)||null;
   let entry;
   if(recMode==='point'){
-    entry={id:Date.now(),date:dk,time:document.getElementById('entryTime').value||nowTime(),
+    entry={id:uniqueId(),date:dk,time:document.getElementById('entryTime').value||nowTime(),
            tag:content,l1:c.l1,l2:l2str,l2Set:[...c.l2Set],note,fare:fare||null,expenses,imgs:[...imgBuf.rec],mode:'point'};
   }else{
     const ts=document.getElementById('entryTs').value,te=document.getElementById('entryTe').value;
     if(!ts||!te){toast('请填写开始和结束时间');return;}
-    entry={id:Date.now(),date:dk,timeStart:ts,timeEnd:te,
+    entry={id:uniqueId(),date:dk,timeStart:ts,timeEnd:te,
            tag:content,l1:c.l1,l2:l2str,l2Set:[...c.l2Set],note,fare:fare||null,expenses,imgs:[...imgBuf.rec],mode:'range'};
   }
   saveEntry(entry);
@@ -1126,8 +1128,9 @@ function openEdit(dk,id){
   document.getElementById('editContent').value=e.tag||'';
   document.getElementById('editNote').value=e.note||'';
   const isWork = (CATS.find(x=>x.id===e.l1)||{}).hasExpense;
-  expenseBuf.edit = e.expenses
-    ? e.expenses.map(x=>({label:x.label,amount:String(x.amount)}))
+  // 完整载入原始费用数据
+  expenseBuf.edit = e.expenses && e.expenses.length
+    ? e.expenses.map(x=>({label:x.label||'',amount:x.amount!=null?String(x.amount):''}))
     : (e.fare ? [{label:e.l2||'费用',amount:String(e.fare)}] : []);
   document.getElementById('editExpensePanel').style.display = isWork ? 'block' : 'none';
   renderExpenseItems('edit');
@@ -1145,8 +1148,12 @@ function saveEdit(){
   if(!c.l2Set) c.l2Set=new Set();
   const l2str=[...c.l2Set].join('·')||c.l2||null;
   const fareVal = document.getElementById('editFare') ? document.getElementById('editFare').value : null;
-  const expenses = expenseBuf.edit.filter(x=>x.label||x.amount).map(x=>({label:x.label,amount:parseFloat(x.amount)||0}));
-  const fare = expenses.length ? expenses.reduce((s,x)=>s+x.amount,0) : (fareVal?+fareVal:null);
+  // 只有当 expenseBuf.edit 有内容时才更新费用，否则保留原始数据
+  const hasNewExpenses = expenseBuf.edit.some(x=>x.label||x.amount);
+  const expenses = hasNewExpenses
+    ? expenseBuf.edit.filter(x=>x.label||x.amount).map(x=>({label:x.label,amount:parseFloat(x.amount)||0}))
+    : (e.expenses||[]);
+  const fare = expenses.length ? expenses.reduce((s,x)=>s+x.amount,0) : (e.fare||null);
   const upd={...e,date:newDate,tag:document.getElementById('editContent').value.trim()||e.tag,
               l1:c.l1,l2:l2str,l2Set:[...c.l2Set],
               note:document.getElementById('editNote').value.trim(),
@@ -1258,7 +1265,7 @@ function saveIdea(){
   const text=document.getElementById('ideaText').value.trim();
   if(!text){toast('请输入内容');return;}
   const tag=document.getElementById('ideaTag').value.trim().replace(/^#/,'');
-  const idea={id:Date.now(),text,tag:tag||null,color:ideaSelColor,imgs:[...imgBuf.idea],ts:nowTime(),date:todayKey()};
+  const idea={id:uniqueId(),text,tag:tag||null,color:ideaSelColor,imgs:[...imgBuf.idea],ts:nowTime(),date:todayKey()};
   const ideas=loadIdeas();ideas.unshift(idea);saveIdeas(ideas);
   document.getElementById('ideaText').value='';
   document.getElementById('ideaTag').value='';
@@ -1766,7 +1773,7 @@ function confirmImport(){
     const ts = item.timeStart || '00:00';
     const te = item.timeEnd  || (item.timeStart || '00:00');
     const entry = {
-      id: Date.now() + Math.random(),
+      id: uniqueId(),
       date: item.date,
       tag: item.tag,
       l1: null, l2: null,
