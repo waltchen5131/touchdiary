@@ -137,9 +137,10 @@ body {
   font-size: 13px;
   color: var(--label2);
   font-weight: 500;
-  width: 44px;
+  width: 52px;
   flex-shrink: 0;
   letter-spacing: -0.1px;
+  line-height: 1.4;
 }
 .form-input {
   flex: 1;
@@ -378,7 +379,7 @@ input[type="time"].form-input {
   box-shadow:var(--shadow);
 }
 .hist-filter-row { display:flex; gap:7px; align-items:center; flex-wrap:wrap; }
-.filter-label { font-size:11px; color:var(--label2); font-weight:500; width:28px; flex-shrink:0; }
+.filter-label { font-size:11px; color:var(--label2); font-weight:500; width:36px; flex-shrink:0; line-height:1.4; }
 .filter-time {
   background:var(--fill);
   border:none;
@@ -410,6 +411,44 @@ input[type="time"].form-input {
 .hist-date-line { flex:1; height:0.5px; background:var(--separator); }
 .hist-date-text { font-size:12px; color:var(--label); white-space:nowrap; font-weight:700; letter-spacing:-0.1px; }
 .hist-date-count { font-size:11px; color:var(--label2); font-weight:500; font-variant-numeric:tabular-nums; }
+.hist-day-fare {
+  font-size:12px; font-weight:700; color:var(--green);
+  background:rgba(52,199,89,0.12);
+  padding:3px 10px; border-radius:20px;
+  font-variant-numeric:tabular-nums;
+  display:inline-flex; align-items:baseline; gap:3px;
+  white-space:nowrap; flex-shrink:0;
+}
+.hist-day-fare-lang {
+  font-size:8.5px; font-weight:500; opacity:0.65; letter-spacing:0.01em;
+}
+/* ── MULTILINGUAL LABELS ── */
+.ml-sub {
+  font-size: 0.68em;
+  opacity: 0.58;
+  font-weight: 400;
+  margin-left: 3px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.ml-block {
+  display: block;
+  font-size: 8px;
+  opacity: 0.58;
+  font-weight: 400;
+  line-height: 1.4;
+  margin-top: 1px;
+  letter-spacing: 0.01em;
+}
+.nav-tab-ml {
+  display: block;
+  font-size: 8px;
+  opacity: 0.55;
+  font-weight: 400;
+  line-height: 1;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
 .hist-group { margin-bottom:14px; }
 .hist-group-header {
   display:flex; align-items:center; gap:8px;
@@ -648,7 +687,7 @@ input[type="time"].form-input {
   line-height:1; display:flex; align-items:center; justify-content:center;
 }
 .modal-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.modal-label { font-size:13px; color:var(--label2); font-weight:500; width:44px; flex-shrink:0; }
+.modal-label { font-size:13px; color:var(--label2); font-weight:500; width:52px; flex-shrink:0; line-height:1.4; }
 .modal-input {
   flex:1; background:var(--bg2);
   border:none; border-radius:var(--radius-sm);
@@ -842,12 +881,12 @@ input[type="time"].form-input {
     <div class="live-time" id="liveTime"></div>
   </div>
   <div class="nav-tabs">
-    <div class="nav-tab active" onclick="switchTab('record')">记录</div>
-    <div class="nav-tab" onclick="switchTab('idea')">💡 灵感</div>
-    <div class="nav-tab" onclick="switchTab('history')">历史</div>
-    <div class="nav-tab" onclick="switchTab('export')">导出</div>
-    <div class="nav-tab" onclick="switchTab('stats')">统计</div>
-    <div class="nav-tab" onclick="switchTab('settings')">⚙️</div>
+    <div class="nav-tab active" onclick="switchTab('record')">记录<span class="nav-tab-ml">Record / 記録</span></div>
+    <div class="nav-tab" onclick="switchTab('idea')">💡 灵感<span class="nav-tab-ml">Ideas / アイデア</span></div>
+    <div class="nav-tab" onclick="switchTab('history')">历史<span class="nav-tab-ml">History / 履歴</span></div>
+    <div class="nav-tab" onclick="switchTab('export')">导出<span class="nav-tab-ml">Export / 出力</span></div>
+    <div class="nav-tab" onclick="switchTab('stats')">统计<span class="nav-tab-ml">Stats / 統計</span></div>
+    <div class="nav-tab" onclick="switchTab('settings')">⚙️<span class="nav-tab-ml">Settings / 設定</span></div>
   </div>
 </div>
 
@@ -857,19 +896,19 @@ input[type="time"].form-input {
 <div id="recordView">
   <div class="form-card">
     <div class="mode-toggle">
-      <div class="mode-btn active" id="modePoint" onclick="setMode('point')">⚡ 时刻</div>
-      <div class="mode-btn" id="modeRange" onclick="setMode('range')">⏱ 时间段</div>
+      <div class="mode-btn active" id="modePoint" onclick="setMode('point')">⚡ 时刻<span class="ml-sub">Moment / 時刻</span></div>
+      <div class="mode-btn" id="modeRange" onclick="setMode('range')">⏱ 时间段<span class="ml-sub">Range / 時間帯</span></div>
     </div>
     <div class="form-row">
-      <span class="form-label">日期</span>
+      <span class="form-label">日期<span class="ml-block">Date / 日付</span></span>
       <input type="date" class="form-input" id="entryDate"/>
     </div>
     <div class="form-row" id="rowPoint">
-      <span class="form-label">时间</span>
+      <span class="form-label">时间<span class="ml-block">Time / 時刻</span></span>
       <input type="time" class="form-input" id="entryTime"/>
     </div>
     <div class="form-row" id="rowRange" style="display:none">
-      <span class="form-label">时段</span>
+      <span class="form-label">时段<span class="ml-block">Period / 時間帯</span></span>
       <div class="time-range">
         <input type="time" class="form-input" id="entryTs"/>
         <span class="time-sep">→</span>
@@ -877,7 +916,7 @@ input[type="time"].form-input {
       </div>
     </div>
     <div class="form-row">
-      <span class="form-label">事项</span>
+      <span class="form-label">事项<span class="ml-block">Event / 内容</span></span>
       <input type="text" class="form-input" id="entryContent" placeholder="做了什么…" maxlength="50"/>
     </div>
     <!-- 分类 widget (record) -->
@@ -885,27 +924,27 @@ input[type="time"].form-input {
     <!-- 费用明细面板（选中报销类子标签时显示） -->
     <div id="recExpensePanel" style="display:none">
       <div class="expense-panel">
-        <div class="expense-panel-title">💴 费用明细</div>
+        <div class="expense-panel-title">💴 费用明细<span style="font-size:9px;opacity:0.6;font-weight:400;margin-left:4px;">Expense Detail / 費用明細</span></div>
         <div id="recExpenseQuick" style="display:none"></div>
         <div id="recExpenseItems"></div>
-        <button class="expense-add-btn" onclick="addExpenseItem('rec')">＋ 自定义添加</button>
+        <button class="expense-add-btn" onclick="addExpenseItem('rec')">＋ 自定义添加<span class="ml-sub">Custom / カスタム追加</span></button>
         <div class="expense-total" id="recExpenseTotal"></div>
       </div>
     </div>
     <div class="form-row" style="align-items:flex-start">
-      <span class="form-label" style="margin-top:8px">备注</span>
+      <span class="form-label" style="margin-top:8px">备注<span class="ml-block">Note / メモ</span></span>
       <textarea class="form-input" id="entryNote" placeholder="可选备注…" rows="2" style="resize:none;line-height:1.5;font-size:13px;"></textarea>
     </div>
     <div class="img-upload-area">
-      <div style="font-size:10px;color:var(--tc);font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">图片</div>
-      <label class="img-upload-btn" for="recImgInput"><span>📷</span><span>添加图片（可多张）</span></label>
+      <div style="font-size:10px;color:var(--tc);font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">图片 <span style="font-size:8px;opacity:0.6;font-weight:400;">Photo / 写真</span></div>
+      <label class="img-upload-btn" for="recImgInput"><span>📷</span><span>添加图片（可多张）<span class="ml-sub">Add Photo / 写真追加</span></span></label>
       <input type="file" id="recImgInput" accept="image/*" multiple style="display:none" onchange="onImgInput(this,'rec')"/>
       <div class="img-preview-row" id="recImgPreview"></div>
     </div>
-    <button class="submit-btn" onclick="handleSubmit(event)"><span>✦</span><span>记录触点</span></button>
+    <button class="submit-btn" onclick="handleSubmit(event)"><span>✦</span><span>记录触点<span class="ml-sub">Record / 記録する</span></span></button>
   </div>
   <div class="section-header">
-    <span class="section-title">今日触点</span>
+    <span class="section-title">今日触点<span class="ml-sub">Today / 今日の記録</span></span>
     <span class="count-badge" id="todayCount">0 条</span>
   </div>
   <div class="scroll-list"><div class="timeline" id="timeline"></div></div>
@@ -914,25 +953,25 @@ input[type="time"].form-input {
 <!-- ══ 灵感 ══ -->
 <div id="ideaView" style="display:none">
   <div class="idea-panel">
-    <div style="font-size:13px;font-weight:600;margin-bottom:10px;">💡 记录灵感</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;">💡 记录灵感<span class="ml-sub">Record Ideas / アイデアを記録</span></div>
     <div class="idea-input-wrap">
       <textarea class="idea-textarea" id="ideaText" placeholder="想法、灵感、随手记下来…" rows="3"></textarea>
     </div>
     <div class="idea-meta-row">
       <input type="text" class="idea-tag-input" id="ideaTag" placeholder="#标签" maxlength="12"/>
       <div class="idea-color-btns" id="ideaColorBtns"></div>
-      <button class="idea-submit" onclick="saveIdea()">记下来</button>
+      <button class="idea-submit" onclick="saveIdea()">记下来<span class="ml-sub">Save / 保存</span></button>
     </div>
     <div class="idea-img-area">
-      <label class="img-upload-btn" for="ideaImgInput" style="margin-top:6px;"><span>📷</span><span>附图</span></label>
+      <label class="img-upload-btn" for="ideaImgInput" style="margin-top:6px;"><span>📷</span><span>附图<span class="ml-sub">Photo / 写真</span></span></label>
       <input type="file" id="ideaImgInput" accept="image/*" multiple style="display:none" onchange="onImgInput(this,'idea')"/>
       <div class="img-preview-row" id="ideaImgPreview"></div>
     </div>
   </div>
-  <input type="text" class="idea-search" id="ideaSearch" placeholder="搜索灵感…" oninput="renderIdeas()"/>
+  <input type="text" class="idea-search" id="ideaSearch" placeholder="搜索灵感… Search / 検索" oninput="renderIdeas()"/>
   <div class="idea-filter-row" id="ideaFilterRow"></div>
   <div class="section-header">
-    <span class="section-title">灵感库</span>
+    <span class="section-title">灵感库<span class="ml-sub">Idea Bank / アイデア集</span></span>
     <span class="count-badge" id="ideaCount">0 条</span>
   </div>
   <div class="scroll-list" id="ideaList"></div>
@@ -942,19 +981,19 @@ input[type="time"].form-input {
 <div id="historyView" style="display:none">
   <div class="hist-filter-bar">
     <div class="hist-filter-row">
-      <span class="filter-label">时段</span>
+      <span class="filter-label">时段<span class="ml-block">Period/時間帯</span></span>
       <input type="time" class="filter-time" id="filterStart" onchange="renderHist()"/>
       <span style="font-size:11px;color:var(--tc)">—</span>
       <input type="time" class="filter-time" id="filterEnd" onchange="renderHist()"/>
-      <span class="filter-clear" onclick="clearFilter()">清除</span>
+      <span class="filter-clear" onclick="clearFilter()">清除<span class="ml-sub">Clear/クリア</span></span>
     </div>
     <div class="hist-filter-row" style="margin-top:6px;">
-      <span class="filter-label">分类</span>
+      <span class="filter-label">分类<span class="ml-block">Cat./分類</span></span>
       <div class="hist-cat-chips" id="histCatChips"></div>
     </div>
   </div>
   <div class="section-header">
-    <span class="section-title">全部历史</span>
+    <span class="section-title">全部历史<span class="ml-sub">All History / 全履歴</span></span>
     <span class="count-badge" id="histCount">0 条</span>
   </div>
   <div id="histAllDates"></div>
@@ -963,25 +1002,25 @@ input[type="time"].form-input {
 <!-- ══ 导出 ══ -->
 <div id="exportView" style="display:none">
   <div class="export-panel">
-    <div style="font-size:13px;font-weight:600;margin-bottom:12px;">📤 导出记录</div>
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px;">📤 导出记录<span class="ml-sub">Export Records / エクスポート</span></div>
     <div class="exp-section">
-      <div class="exp-label">日期范围</div>
+      <div class="exp-label">日期范围<span class="ml-sub">Date Range / 日付範囲</span></div>
       <div class="exp-date-row">
         <input type="date" class="form-input" id="expFrom" onchange="refreshPreview()" style="font-family:'DM Mono',monospace;font-size:12px;"/>
         <span class="time-sep">—</span>
         <input type="date" class="form-input" id="expTo" onchange="refreshPreview()" style="font-family:'DM Mono',monospace;font-size:12px;"/>
       </div>
       <div class="preset-row">
-        <div class="preset-btn" onclick="setPreset(this,'today')">今天</div>
-        <div class="preset-btn" onclick="setPreset(this,'yesterday')">昨天</div>
-        <div class="preset-btn" onclick="setPreset(this,'week')">本周</div>
-        <div class="preset-btn" onclick="setPreset(this,'lastweek')">上周</div>
-        <div class="preset-btn" onclick="setPreset(this,'month')">本月</div>
-        <div class="preset-btn" onclick="setPreset(this,'all')">全部</div>
+        <div class="preset-btn" onclick="setPreset(this,'today')">今天<span class="ml-sub">Today/今日</span></div>
+        <div class="preset-btn" onclick="setPreset(this,'yesterday')">昨天<span class="ml-sub">Yest./昨日</span></div>
+        <div class="preset-btn" onclick="setPreset(this,'week')">本周<span class="ml-sub">Week/今週</span></div>
+        <div class="preset-btn" onclick="setPreset(this,'lastweek')">上周<span class="ml-sub">Last/先週</span></div>
+        <div class="preset-btn" onclick="setPreset(this,'month')">本月<span class="ml-sub">Month/今月</span></div>
+        <div class="preset-btn" onclick="setPreset(this,'all')">全部<span class="ml-sub">All/全て</span></div>
       </div>
     </div>
     <div class="exp-section">
-      <div class="exp-label">时段筛选（可选）</div>
+      <div class="exp-label">时段筛选（可选）<span class="ml-sub">Time Filter / 時間フィルタ</span></div>
       <div class="exp-date-row">
         <input type="time" class="form-input" id="expTf" oninput="refreshPreview()" style="font-family:'DM Mono',monospace;font-size:12px;"/>
         <span class="time-sep">—</span>
@@ -989,26 +1028,26 @@ input[type="time"].form-input {
       </div>
     </div>
     <div class="exp-section">
-      <div class="exp-label">分类筛选</div>
+      <div class="exp-label">分类筛选<span class="ml-sub">Category / カテゴリ</span></div>
       <div id="expTree"></div>
     </div>
     <div class="exp-section">
-      <div class="exp-label">导出格式</div>
+      <div class="exp-label">导出格式<span class="ml-sub">Format / フォーマット</span></div>
       <div class="format-row">
-        <div class="format-btn active" id="fmt-text" onclick="setFmt('text')">📝 文本</div>
+        <div class="format-btn active" id="fmt-text" onclick="setFmt('text')">📝 文本<span class="ml-sub">Text/テキスト</span></div>
         <div class="format-btn" id="fmt-csv" onclick="setFmt('csv')">📊 CSV</div>
         <div class="format-btn" id="fmt-md" onclick="setFmt('md')">Markdown</div>
       </div>
     </div>
     <div class="exp-section">
-      <div class="exp-label">预览</div>
+      <div class="exp-label">预览<span class="ml-sub">Preview / プレビュー</span></div>
       <div class="preview-box" id="expPreview"><span class="preview-empty">选择日期范围后自动生成…</span></div>
       <div class="exp-count" id="expCount"></div>
     </div>
     <div class="exp-actions">
-      <button class="exp-btn exp-copy" onclick="doCopy()">📋 复制</button>
-      <button class="exp-btn exp-share" onclick="doShare()">🔗 分享</button>
-      <button class="exp-btn exp-dl" onclick="doDownload()">⬇️ 下载文件</button>
+      <button class="exp-btn exp-copy" onclick="doCopy()">📋 复制<span class="ml-sub">Copy/コピー</span></button>
+      <button class="exp-btn exp-share" onclick="doShare()">🔗 分享<span class="ml-sub">Share/シェア</span></button>
+      <button class="exp-btn exp-dl" onclick="doDownload()">⬇️ 下载文件<span class="ml-sub">Download / ダウンロード</span></button>
     </div>
   </div>
 </div>
@@ -1016,7 +1055,7 @@ input[type="time"].form-input {
 <!-- ══ 统计 ══ -->
 <div id="statsView" style="display:none">
   <div class="stats-grid" id="statsGrid"></div>
-  <div class="section-header" style="padding-top:4px"><span class="section-title">分类分布</span></div>
+  <div class="section-header" style="padding-top:4px"><span class="section-title">分类分布<span class="ml-sub">Distribution / カテゴリ分布</span></span></div>
   <div id="catBars" style="padding-bottom:16px"></div>
 </div>
 
@@ -1025,11 +1064,11 @@ input[type="time"].form-input {
 
   <!-- 数据备份恢复 -->
   <div class="setting-card">
-    <div class="setting-card-title">🔒 数据备份与恢复</div>
+    <div class="setting-card-title">🔒 数据备份与恢复<span class="ml-sub">Backup & Restore / バックアップ・復元</span></div>
     <div class="setting-desc">备份所有触点和灵感数据到本地文件，更新 App 后可一键恢复。</div>
     <div class="setting-btns">
-      <button class="setting-btn setting-btn-dark" onclick="backupData()">⬇️ 备份数据</button>
-      <label class="setting-btn setting-btn-light" for="restoreInput">⬆️ 恢复数据</label>
+      <button class="setting-btn setting-btn-dark" onclick="backupData()">⬇️ 备份数据<span class="ml-sub">Backup/バックアップ</span></button>
+      <label class="setting-btn setting-btn-light" for="restoreInput">⬆️ 恢复数据<span class="ml-sub">Restore/復元</span></label>
       <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)"/>
     </div>
     <div class="setting-note" id="backupNote"></div>
@@ -1037,7 +1076,7 @@ input[type="time"].form-input {
 
   <!-- 备忘录批量导入 -->
   <div class="setting-card">
-    <div class="setting-card-title">📋 从备忘录批量导入</div>
+    <div class="setting-card-title">📋 从备忘录批量导入<span class="ml-sub">Bulk Import / 一括インポート</span></div>
     <div class="setting-desc">把备忘录内容粘贴进来，每行一条，自动识别日期时间批量导入。</div>
 
     <div style="margin-bottom:10px;">
@@ -1049,27 +1088,27 @@ input[type="time"].form-input {
     <div id="importBox" contenteditable="true" class="import-editbox" 
          data-placeholder="点这里，然后长按粘贴备忘录内容…"></div>
 
-    <button class="setting-btn setting-btn-green" style="margin-top:10px;width:100%;" onclick="parseImport()">🔍 解析预览</button>
+    <button class="setting-btn setting-btn-green" style="margin-top:10px;width:100%;" onclick="parseImport()">🔍 解析预览<span class="ml-sub">Parse & Preview / 解析プレビュー</span></button>
 
     <!-- 解析预览 -->
     <div id="importPreview" style="display:none">
       <div class="section-header" style="margin-top:12px;">
-        <span class="section-title">解析结果</span>
+        <span class="section-title">解析结果<span class="ml-sub">Result / 解析結果</span></span>
         <span class="count-badge" id="importCount">0 条</span>
       </div>
       <div id="importPreviewList"></div>
       <div style="display:flex;gap:8px;margin-top:10px;">
-        <button class="setting-btn setting-btn-light" style="flex:1" onclick="cancelImport()">取消</button>
-        <button class="setting-btn setting-btn-dark" style="flex:2" onclick="confirmImport()">✓ 确认导入</button>
+        <button class="setting-btn setting-btn-light" style="flex:1" onclick="cancelImport()">取消<span class="ml-sub">Cancel/キャンセル</span></button>
+        <button class="setting-btn setting-btn-dark" style="flex:2" onclick="confirmImport()">✓ 确认导入<span class="ml-sub">Confirm Import / 確認</span></button>
       </div>
     </div>
   </div>
 
   <!-- 危险区 -->
   <div class="setting-card" style="border-color:#f5c6c6;">
-    <div class="setting-card-title" style="color:var(--accent);">⚠️ 危险操作</div>
+    <div class="setting-card-title" style="color:var(--accent);">⚠️ 危险操作<span class="ml-sub" style="color:var(--label2)">Danger Zone / 危険操作</span></div>
     <div class="setting-desc">清除所有数据后无法恢复，请先备份。</div>
-    <button class="setting-btn" style="background:#fee;color:var(--accent);border:1.5px solid #f5c6c6;margin-top:8px;" onclick="clearAllData()">🗑 清除所有数据</button>
+    <button class="setting-btn" style="background:#fee;color:var(--accent);border:1.5px solid #f5c6c6;margin-top:8px;" onclick="clearAllData()">🗑 清除所有数据<span class="ml-sub" style="color:var(--accent);opacity:0.7">Clear All / 全データ削除</span></button>
   </div>
 
 </div>
@@ -1080,24 +1119,24 @@ input[type="time"].form-input {
 <div class="modal-overlay" id="editModal">
   <div class="modal-sheet">
     <div class="modal-title">
-      <span id="editModalTitle">编辑触点</span>
+      <span id="editModalTitle">编辑触点<span class="ml-sub">Edit Entry / 記録編集</span></span>
       <span class="modal-close" onclick="closeEdit()">×</span>
     </div>
     <div class="modal-row">
-      <span class="modal-label">日期</span>
+      <span class="modal-label">日期<span class="ml-block">Date / 日付</span></span>
       <input type="date" class="modal-input" id="editDate" style="font-family:'DM Mono',monospace;font-size:12px;"/>
     </div>
     <!-- 模式切换 -->
     <div class="mode-toggle" style="margin-bottom:10px;">
-      <div class="mode-btn" id="editModePoint" onclick="setEditMode('point')">⚡ 时刻</div>
-      <div class="mode-btn" id="editModeRange" onclick="setEditMode('range')">⏱ 时间段</div>
+      <div class="mode-btn" id="editModePoint" onclick="setEditMode('point')">⚡ 时刻<span class="ml-sub">Moment/時刻</span></div>
+      <div class="mode-btn" id="editModeRange" onclick="setEditMode('range')">⏱ 时间段<span class="ml-sub">Range/時間帯</span></div>
     </div>
     <div id="editRowPoint" class="modal-row" style="display:none">
-      <span class="modal-label">时间</span>
+      <span class="modal-label">时间<span class="ml-block">Time / 時刻</span></span>
       <input type="time" class="modal-input" id="editTime" style="font-family:'DM Mono',monospace;font-size:12px;"/>
     </div>
     <div id="editRowRange" class="modal-row">
-      <span class="modal-label">时段</span>
+      <span class="modal-label">时段<span class="ml-block">Period/時間帯</span></span>
       <div class="time-range">
         <input type="time" class="modal-input" id="editTs" style="font-family:'DM Mono',monospace;font-size:12px;"/>
         <span class="time-sep">→</span>
@@ -1105,32 +1144,32 @@ input[type="time"].form-input {
       </div>
     </div>
     <div class="modal-row">
-      <span class="modal-label">事项</span>
+      <span class="modal-label">事项<span class="ml-block">Event / 内容</span></span>
       <input type="text" class="modal-input" id="editContent" maxlength="50"/>
     </div>
     <div class="cat-widget" id="editCatWidget"></div>
     <!-- 费用明细面板 -->
     <div id="editExpensePanel" style="display:none">
       <div class="expense-panel">
-        <div class="expense-panel-title">💴 费用明细</div>
+        <div class="expense-panel-title">💴 费用明细<span style="font-size:9px;opacity:0.6;font-weight:400;margin-left:4px;">Expense Detail / 費用明細</span></div>
         <div id="editExpenseQuick" style="display:none"></div>
         <div id="editExpenseItems"></div>
-        <button class="expense-add-btn" onclick="addExpenseItem('edit')">＋ 自定义添加</button>
+        <button class="expense-add-btn" onclick="addExpenseItem('edit')">＋ 自定义添加<span class="ml-sub">Custom / カスタム追加</span></button>
         <div class="expense-total" id="editExpenseTotal"></div>
       </div>
     </div>
     <div class="modal-row" style="align-items:flex-start">
-      <span class="modal-label" style="margin-top:8px">备注</span>
+      <span class="modal-label" style="margin-top:8px">备注<span class="ml-block">Note / メモ</span></span>
       <textarea class="modal-textarea" id="editNote" rows="2"></textarea>
     </div>
     <div class="modal-sep"></div>
-    <div style="font-size:10px;color:var(--tc);font-family:'DM Mono',monospace;margin-bottom:6px;">图片</div>
-    <label class="img-upload-btn" for="editImgInput" style="display:inline-flex;width:auto;padding:6px 12px;"><span>📷</span><span>添加图片</span></label>
+    <div style="font-size:10px;color:var(--tc);font-family:'DM Mono',monospace;margin-bottom:6px;">图片 <span style="font-size:8px;opacity:0.6;font-weight:400;">Photo / 写真</span></div>
+    <label class="img-upload-btn" for="editImgInput" style="display:inline-flex;width:auto;padding:6px 12px;"><span>📷</span><span>添加图片<span class="ml-sub">Add / 追加</span></span></label>
     <input type="file" id="editImgInput" accept="image/*" multiple style="display:none" onchange="onImgInput(this,'edit')"/>
     <div class="img-preview-row" id="editImgPreview"></div>
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeEdit()">取消</button>
-      <button class="modal-save" onclick="saveEdit()">保存</button>
+      <button class="modal-cancel" onclick="closeEdit()">取消<span class="ml-sub">Cancel/キャンセル</span></button>
+      <button class="modal-save" onclick="saveEdit()">保存<span class="ml-sub">Save/保存</span></button>
     </div>
   </div>
 </div>
@@ -1139,7 +1178,7 @@ input[type="time"].form-input {
 <div class="modal-overlay" id="ideaEditModal">
   <div class="modal-sheet">
     <div class="modal-title">
-      <span>编辑灵感</span>
+      <span>编辑灵感<span class="ml-sub">Edit Idea / アイデア編集</span></span>
       <span class="modal-close" onclick="closeIdeaEdit()">×</span>
     </div>
     <div style="margin-bottom:10px;">
@@ -1150,12 +1189,12 @@ input[type="time"].form-input {
       <div class="idea-color-btns" id="ideaEditColorBtns"></div>
     </div>
     <div class="modal-sep"></div>
-    <label class="img-upload-btn" for="ideaEditImgInput" style="display:inline-flex;width:auto;padding:6px 12px;"><span>📷</span><span>添加图片</span></label>
+    <label class="img-upload-btn" for="ideaEditImgInput" style="display:inline-flex;width:auto;padding:6px 12px;"><span>📷</span><span>添加图片<span class="ml-sub">Add / 追加</span></span></label>
     <input type="file" id="ideaEditImgInput" accept="image/*" multiple style="display:none" onchange="onImgInput(this,'ideaEdit')"/>
     <div class="img-preview-row" id="ideaEditImgPreview"></div>
     <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeIdeaEdit()">取消</button>
-      <button class="modal-save" onclick="saveIdeaEdit()">保存</button>
+      <button class="modal-cancel" onclick="closeIdeaEdit()">取消<span class="ml-sub">Cancel/キャンセル</span></button>
+      <button class="modal-save" onclick="saveIdeaEdit()">保存<span class="ml-sub">Save/保存</span></button>
     </div>
   </div>
 </div>
@@ -1409,7 +1448,7 @@ function buildCatWidget(containerId, ctx){
     }).join('');
   }
   el.innerHTML=`
-    <div class="cat-widget-label">分类</div>
+    <div class="cat-widget-label">分类<span class="ml-sub">Category / カテゴリ</span></div>
     <div class="cat-l1-row">${l1HTML}</div>
     <div class="cat-l2-row" id="${containerId}_l2">${l2HTML}</div>`;
 }
@@ -1533,7 +1572,7 @@ function calcExpenseTotal(ctx){
   const el = document.getElementById(ctx==='rec'?'recExpenseTotal':'editExpenseTotal');
   if(!el) return;
   if(total>0){
-    el.innerHTML=`<span class="expense-total-label">合计</span><span class="expense-total-amount">¥${total.toFixed(2)}</span>`;
+    el.innerHTML=`<span class="expense-total-label">合计<span class="ml-sub">Total / 合計</span></span><span class="expense-total-amount">¥${total.toFixed(2)}</span>`;
   } else {
     el.innerHTML='';
   }
@@ -1565,7 +1604,7 @@ function renderExpenseItems(ctx){
   if(quickEl){
     if(quickTags.length){
       quickEl.innerHTML = `
-        <div class="expense-quick-label">快速添加 · ${lastL2}</div>
+        <div class="expense-quick-label">快速添加<span class="ml-sub">Quick Add / クイック追加</span> · ${lastL2}</div>
         <div class="expense-quick-row">${quickTags.map(t=>`
           <div class="expense-quick-chip" onclick="quickAddExpense('${ctx}','${t.replace(/'/g,"\\'")}')">${t}</div>`).join('')}
         </div>`;
@@ -1833,7 +1872,7 @@ function buildHistCatChips(){
   el.innerHTML = [{id:null,label:'全部',hex:'#1a1a1a'},...CATS].map(c=>`
     <div class="hist-cat-chip${histFilterCat===c.id?' on':''}"
          style="${histFilterCat===c.id?'background:'+c.hex+';color:#fff;':''};"
-         onclick="setHistCat('${c.id}')">${c.id?c.emoji+' '+c.label:'全部'}</div>`).join('');
+         onclick="setHistCat('${c.id}')">${c.id?c.emoji+' '+c.label:'全部<span class="ml-sub">All/全て</span>'}</div>`).join('');
 }
 function setHistCat(id){
   histFilterCat = id==='null'?null:id;
@@ -1872,6 +1911,12 @@ function renderHist(){
     const isYesterday = (()=>{const y=new Date();y.setDate(y.getDate()-1);return dk===`${y.getFullYear()}-${pad(y.getMonth()+1)}-${pad(y.getDate())}`;})();
     const badge = isToday?'今天':isYesterday?'昨天':'';
 
+    // Daily total fare
+    const dayFare = es.reduce((s,e)=>s+(e.fare||0),0);
+    const dayFareTag = dayFare > 0
+      ? `<span class="hist-day-fare">💴 ¥${dayFare.toFixed(2)}<span class="hist-day-fare-lang">Total · 支出総額</span></span>`
+      : '';
+
     // Group by L1 category
     const groups = {};
     const groupOrder = [];
@@ -1903,6 +1948,7 @@ function renderHist(){
       <div class="hist-date-label">
         <span class="hist-date-text">${dayLabel}${badge?` · <span style="color:var(--accent)">${badge}</span>`:''}</span>
         <div class="hist-date-line"></div>
+        ${dayFareTag}
         <span class="hist-date-count">${es.length}条</span>
       </div>
       ${groupsHTML}
@@ -1961,7 +2007,7 @@ function renderIdeas(){
   document.getElementById('ideaFilterRow').innerHTML=
     ['全部',...allTags].map(t=>`
       <div class="idea-filter-chip${(t==='全部'&&!ideaFilterTag)||(t===ideaFilterTag)?' active':''}"
-           onclick="setIdeaTag('${t}')">${t==='全部'?'全部':'#'+t}</div>`).join('');
+           onclick="setIdeaTag('${t}')">${t==='全部'?'全部<span class="ml-sub">All/全て</span>':'#'+t}</div>`).join('');
 
   document.getElementById('ideaCount').textContent=`${ideas.length} 条`;
   const list=document.getElementById('ideaList');
@@ -2236,10 +2282,10 @@ function renderStats(){
   const peak=Object.entries(hc).sort((a,b)=>b[1]-a[1])[0];
   const totalFare=ae.filter(e=>e.fare).reduce((s,e)=>s+(+e.fare),0);
   document.getElementById('statsGrid').innerHTML=`
-    <div class="stat-card"><div class="stat-num">${td.length}</div><div class="stat-label">今日触点</div></div>
-    <div class="stat-card"><div class="stat-num">${days}</div><div class="stat-label">记录天数</div></div>
-    <div class="stat-card"><div class="stat-num">${ae.length}</div><div class="stat-label">总触点数</div></div>
-    <div class="stat-card"><div class="stat-num" style="font-size:18px;">¥${totalFare.toFixed(0)}</div><div class="stat-label">累计费用</div></div>`;
+    <div class="stat-card"><div class="stat-num">${td.length}</div><div class="stat-label">今日触点<span class="ml-block">Today / 今日</span></div></div>
+    <div class="stat-card"><div class="stat-num">${days}</div><div class="stat-label">记录天数<span class="ml-block">Days / 記録日数</span></div></div>
+    <div class="stat-card"><div class="stat-num">${ae.length}</div><div class="stat-label">总触点数<span class="ml-block">Total / 合計</span></div></div>
+    <div class="stat-card"><div class="stat-num" style="font-size:18px;">¥${totalFare.toFixed(0)}</div><div class="stat-label">累计费用<span class="ml-block">Expenses / 累計費用</span></div></div>`;
   const cc={};ae.forEach(e=>{cc[e.l1||'personal']=(cc[e.l1||'personal']||0)+1;});
   const mx=Math.max(...Object.values(cc),1);
   document.getElementById('catBars').innerHTML=CATS.map(cat=>{
