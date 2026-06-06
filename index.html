@@ -868,6 +868,23 @@ input[type="time"].form-input {
 }
 @keyframes rpl { to{transform:scale(4);opacity:0} }
 .exp-section { margin-bottom:16px; }
+.cny-note {
+  font-size: 9.5px;
+  color: rgba(40,180,80,0.9);
+  font-weight: 600;
+  margin-left: 4px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.rate-pill {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size: 10px; color: var(--label2);
+  background: var(--fill); border-radius: 20px;
+  padding: 2px 8px; margin-left: 6px;
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -878,7 +895,10 @@ input[type="time"].form-input {
       <div class="date-display" id="dateDisplay"></div>
       <div class="app-title">触<span>点</span>日记</div>
     </div>
-    <div class="live-time" id="liveTime"></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+      <div class="live-time" id="liveTime"></div>
+      <span class="rate-pill" id="ratePill" onclick="fetchExchangeRate()" title="点击刷新汇率">💱 获取汇率中…</span>
+    </div>
   </div>
   <div class="nav-tabs">
     <div class="nav-tab active" onclick="switchTab('record')">记录<span class="nav-tab-ml">Record / 記録</span></div>
@@ -1337,6 +1357,64 @@ const expExcL1 = new Set();   // excluded l1 ids
 const expExcL2 = {};          // {l1id: Set<sub>}
 
 // ════════════════════════════════════════════
+// JPY→CNY LIVE EXCHANGE RATE
+// ════════════════════════════════════════════
+let JPY_CNY_RATE = 0.04822; // fallback (2026-06 approximate)
+let JPY_CNY_RATE_TIME = '';
+
+async function fetchExchangeRate(){
+  // 尝试多个免费无 key 汇率源
+  const sources = [
+    // 主源：Cloudflare Pages 每日更新，最新
+    async () => {
+      const r = await fetch('https://latest.currency-api.pages.dev/v1/currencies/jpy.json');
+      const d = await r.json();
+      return d.jpy && d.jpy.cny ? {rate: d.jpy.cny, date: d.date} : null;
+    },
+    // 备源1：jsdelivr CDN（可能有几天缓存延迟）
+    async () => {
+      const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json');
+      const d = await r.json();
+      return d.jpy && d.jpy.cny ? {rate: d.jpy.cny, date: d.date} : null;
+    },
+    // 备源2：open.er-api
+    async () => {
+      const r = await fetch('https://open.er-api.com/v6/latest/JPY');
+      const d = await r.json();
+      return d.rates && d.rates.CNY ? {rate: d.rates.CNY, date: d.time_last_update_utc||''} : null;
+    }
+  ];
+  for(const src of sources){
+    try{
+      const result = await src();
+      if(result){
+        JPY_CNY_RATE = result.rate;
+        JPY_CNY_RATE_TIME = result.date;
+        renderToday();
+        if(document.getElementById('historyView').style.display!=='none') renderHist();
+        if(document.getElementById('statsView').style.display!=='none') renderStats();
+        updateRatePill();
+        return;
+      }
+    }catch(e){}
+  }
+}
+
+function updateRatePill(){
+  const el = document.getElementById('ratePill');
+  if(el){
+    const dateStr = JPY_CNY_RATE_TIME ? ` · ${String(JPY_CNY_RATE_TIME).slice(0,10)}` : '';
+    el.textContent = `💱 100日元≈${(JPY_CNY_RATE*100).toFixed(2)}人民币${dateStr}`;
+  }
+}
+
+function cnyNote(jpy){
+  if(!jpy || jpy<=0) return '';
+  const cny = jpy * JPY_CNY_RATE;
+  return `<span class="cny-note">≈${cny.toFixed(2)}人民币</span>`;
+}
+
+// ════════════════════════════════════════════
 // STORAGE
 // ════════════════════════════════════════════
 // STORAGE
@@ -1572,7 +1650,7 @@ function calcExpenseTotal(ctx){
   const el = document.getElementById(ctx==='rec'?'recExpenseTotal':'editExpenseTotal');
   if(!el) return;
   if(total>0){
-    el.innerHTML=`<span class="expense-total-label">合计<span class="ml-sub">Total / 合計</span></span><span class="expense-total-amount">¥${total.toFixed(2)}</span>`;
+    el.innerHTML=`<span class="expense-total-label">合计<span class="ml-sub">Total / 合計</span></span><span class="expense-total-amount">¥${total.toFixed(2)}${cnyNote(total)}</span>`;
   } else {
     el.innerHTML='';
   }
@@ -1732,7 +1810,7 @@ function itemHTML(e,dk,showDate=false){
   const db=showDate?`<div style="font-size:10px;color:var(--tc);font-family:'DM Mono',monospace;margin-top:1px;">${e.date}</div>`:'';
   const noteEl=e.note?`<div class="tl-note">${esc(e.note)}</div>`:'';
   const fareEl = e.fare
-    ? `<span class="tl-fare">💴 ¥${Number(e.fare).toFixed(2)}</span>`
+    ? `<span class="tl-fare">💴 ¥${Number(e.fare).toFixed(2)}${cnyNote(e.fare)}</span>`
     : '';
   const expDetail = e.expenses && e.expenses.length
     ? `<div class="tl-expense-detail">${e.expenses.filter(x=>x.amount>0).map(x=>`<span>${x.label.split(' ')[0]} ¥${x.amount}</span>`).join('<span class="tl-exp-sep">+</span>')}</div>`
@@ -1914,7 +1992,7 @@ function renderHist(){
     // Daily total fare
     const dayFare = es.reduce((s,e)=>s+(e.fare||0),0);
     const dayFareTag = dayFare > 0
-      ? `<span class="hist-day-fare">💴 ¥${dayFare.toFixed(2)}<span class="hist-day-fare-lang">Total · 支出総額</span></span>`
+      ? `<span class="hist-day-fare">💴 ¥${dayFare.toFixed(2)}<span class="hist-day-fare-lang">Total · 支出総額</span>${cnyNote(dayFare)}</span>`
       : '';
 
     // Group by L1 category
@@ -1931,7 +2009,7 @@ function renderHist(){
       const entries = groups[key];
       const groupFare = entries.reduce((s,e)=>s+(e.fare||0),0);
       const fareTag = groupFare>0
-        ?`<span class="hist-group-fare">💴 ¥${groupFare.toFixed(2)}</span>`:'';
+        ?`<span class="hist-group-fare">💴 ¥${groupFare.toFixed(2)}${cnyNote(groupFare)}</span>`:'';
       return `<div class="hist-group">
         <div class="hist-group-header">
           <span class="hist-group-label" style="color:${cat?cat.hex:'var(--tc)'}">
@@ -2285,7 +2363,7 @@ function renderStats(){
     <div class="stat-card"><div class="stat-num">${td.length}</div><div class="stat-label">今日触点<span class="ml-block">Today / 今日</span></div></div>
     <div class="stat-card"><div class="stat-num">${days}</div><div class="stat-label">记录天数<span class="ml-block">Days / 記録日数</span></div></div>
     <div class="stat-card"><div class="stat-num">${ae.length}</div><div class="stat-label">总触点数<span class="ml-block">Total / 合計</span></div></div>
-    <div class="stat-card"><div class="stat-num" style="font-size:18px;">¥${totalFare.toFixed(0)}</div><div class="stat-label">累计费用<span class="ml-block">Expenses / 累計費用</span></div></div>`;
+    <div class="stat-card"><div class="stat-num" style="font-size:18px;">¥${totalFare.toFixed(0)}</div><div class="stat-label">累计费用<span class="ml-block">Expenses / 累計費用</span></div>${totalFare>0?`<div style="font-size:10px;color:rgba(40,180,80,0.9);font-weight:600;margin-top:3px;">≈${(totalFare*JPY_CNY_RATE).toFixed(2)}人民币</div>`:''}</div>`;
   const cc={};ae.forEach(e=>{cc[e.l1||'personal']=(cc[e.l1||'personal']||0)+1;});
   const mx=Math.max(...Object.values(cc),1);
   document.getElementById('catBars').innerHTML=CATS.map(cat=>{
@@ -2536,6 +2614,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 updateClock();setInterval(updateClock,1000);
 migrateOldData();
 initDefaults();
+fetchExchangeRate();
 buildCatWidget('recCatWidget','rec');
 buildIdeaColorBtns('ideaColorBtns',ideaSelColor,'ideaColorClick');
 renderToday();
